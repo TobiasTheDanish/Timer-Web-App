@@ -1,0 +1,200 @@
+{{ block "timer" . }}
+	<div 
+		id="timer-component"
+		{{if eq .IsRunning true}}hx-post="/tick" hx-trigger="every 1s" hx-target="#time-container-grid" hx-swap="outerHTML" {{end}} hx-indicator="#component-indicator"
+		class="relative flex w-max flex-col items-center gap-6 rounded-xl bg-white/10 px-12 py-6 text-white"
+		>
+		{{ template "timeContainerGrid" . }}
+		{{ template "timerActionButtons" . }}
+	</div>
+{{ end }}
+
+{{ block "timeContainerGrid" . }}
+	<div id="time-container-grid" class="grid grid-cols-3 gap-12">
+		{{ if eq .IsRunning false }}
+			{{ template "timeContainer" .Hours }}
+			{{ template "timeContainer" .Minutes }}
+			{{ template "timeContainer" .Seconds }}
+		{{ end }}
+		{{ if eq .IsRunning true }}
+			{{ template "timeContainerRunning" .Hours }}
+			{{ template "timeContainerRunning" .Minutes }}
+			{{ template "timeContainerRunning" .Seconds }}
+		{{ end }}
+	</div>
+{{ end }}
+
+{{ block "timeContainer" . }}
+	<div class="grid grid-cols-1 justify-items-stretch text-xl gap-y-3">
+		<h5 class="font-semibold text-center">
+			{{.Text}}
+		</h5>
+		<form 
+			id="increment-form"
+			name="increment-form"
+			hx-post="/increment"
+			hx-target="next .number-display"
+			hx-swap="outerHTML"
+			hx-include='#{{.Text}}-value, #{{.Text}}-max, #{{.Text}}-text'
+			hx-indicator="#indicator-timer"
+			>
+			<button
+				tabindex="-1" 
+				type="submit"
+				class="w-full flex items-center justify-center py-2 px-6 rounded-xl bg-[#15162c]/50 disabled:bg-[#15162c]/30"
+				>
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-6 h-6">
+					<path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+				</svg>
+			</button>
+		</form>
+		{{ template "numberDisplay" . }}
+		<form 
+			id="increment-form"
+			name="increment-form"
+			hx-post="/decrement"
+			hx-target="previous .number-display"
+			hx-swap="outerHTML"
+			hx-include='#{{.Text}}-value, #{{.Text}}-max, #{{.Text}}-text'
+			hx-indicator="#indicator-timer"
+			>
+			<button
+				tabindex="-1"
+				type="submit"
+				class="w-full flex items-center justify-center py-2 px-6 rounded-xl bg-[#15162c]/50 disabled:bg-[#15162c]/30"
+				>
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-6 h-6">
+					<path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+				</svg>
+			</button>
+		</form>
+	</div>
+{{ end }}
+
+{{ block "timeContainerRunning" . }}
+	<div class="grid grid-cols-1 justify-items-stretch text-lg gap-y-3">
+		<h5 class="text-semibold text-center">
+			{{.Text}}
+		</h5>
+		<form 
+			id="increment-form"
+			name="increment-form"
+			hx-post="/increment"
+			hx-target="next .number-display"
+			hx-swap="outerHTML"
+			hx-include='#{{.Text}}-value, #{{.Text}}-max, #{{.Text}}-text'
+			hx-indicator="#indicator-timer"
+			>
+			<button
+				disabled
+				type="submit"
+				class="w-full flex items-center justify-center py-2 px-6 rounded-xl bg-[#15162c]/50 disabled:bg-[#15162c]/30"
+				>
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-6 h-6">
+					<path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+				</svg>
+			</button>
+		</form>
+		{{ template "numberDisplay" . }}
+		<form 
+			id="increment-form"
+			name="increment-form"
+			hx-post="/decrement"
+			hx-target="previous .number-display"
+			hx-swap="outerHTML"
+			hx-include='#{{.Text}}-value, #{{.Text}}-max, #{{.Text}}-text'
+			hx-indicator="#indicator-timer"
+			>
+			<button
+				disabled
+				type="submit"
+				class="w-full flex items-center justify-center py-2 px-6 rounded-xl bg-[#15162c]/50 disabled:bg-[#15162c]/30"
+				>
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-6 h-6">
+					<path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+				</svg>
+			</button>
+		</form>
+	</div>
+{{ end }}
+{{ block "numberDisplay" . }}
+	<div hx-post="/update" hx-trigger="update{{.Text}} from:body" hx-target="#timer-action-buttons" hx-swap="outerHTML" id="number-display-{{.Text}}" class="number-display flex items-center justify-center py-4 px-6 rounded-xl bg-[#15162c]/50">
+		<input 
+		hx-post="/updateNum"
+		hx-trigger="change"
+		hx-target="#number-display-{{.Text}}"
+		hx-swap="outerHTML"
+		hx-include='#{{.Text}}-value, #{{.Text}}-max, #{{.Text}}-text'
+		id="{{.Text}}-value"
+		class="text-center w-16 bg-transparent outline-0 text-2xl"
+		type="input"
+		name="Num"
+		value="{{ .Num }}"
+		/>
+		<input id="{{.Text}}-max" type="hidden" name="Max" value="{{ .Max }}"/>
+		<input id="{{.Text}}-text" type="hidden" name="Text" value="{{.Text}}"/>
+	</div>
+{{ end }}
+
+{{ block "timerActionButtons" . }}
+	<div id="timer-action-buttons" class="grid grid-cols-2 w-full gap-8 px-2 justify-around">
+		{{ if eq .IsRunning false }}
+		<div 
+		class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
+			<button 
+			{{ if eq .CanStart true }}
+				hx-post="/start"
+				hx-trigger="click"
+				hx-target="#timer-component"
+				hx-swap="outerHTML"
+			{{ end }}
+			{{ if eq .CanStart false }}
+				disabled
+			{{ end }}
+			class="w-full px-4 py-2 text-lg text-white font-semibold rounded-full z-10 bg-[#261d44] hover:bg-[#221940] focus:outline-none focus:bg-[#1d153c]">
+				Start
+			</button>
+		</div>
+		<div 
+		class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
+			<button 
+			{{ if eq .CanStart true }}
+				hx-post="/reset"
+				hx-trigger="click"
+				hx-target="#timer-component"
+				hx-swap="outerHTML"
+			{{ end }}
+			{{ if eq .CanStart false }}
+				disabled
+			{{ end }}
+			class="w-full px-4 py-2 text-lg text-white font-semibold rounded-full z-10 bg-[#261d44] hover:bg-[#221940] focus:outline-none focus:bg-[#1d153c]">
+				Reset
+			</button>
+		</div>
+		{{end}}
+		{{ if eq .IsRunning true }}
+		<div 
+		class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
+			<button 
+				hx-post="/pause"
+				hx-trigger="click, timerEnded from:body"
+				hx-target="#timer-component"
+				hx-swap="outerHTML"
+			class="w-full px-4 py-2 text-lg text-white font-semibold rounded-full z-10 bg-[#261d44] hover:bg-[#221940] focus:outline-none focus:bg-[#1d153c]">
+				Pause
+			</button>
+		</div>
+		<div 
+		class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
+			<button 
+				hx-post="/stop"
+				hx-trigger="click, timerEnded from:body"
+				hx-target="#timer-component"
+				hx-swap="outerHTML"
+			class="w-full px-4 py-2 text-lg text-white font-semibold rounded-full z-10 bg-[#261d44] hover:bg-[#221940] focus:outline-none focus:bg-[#1d153c]">
+				Stop
+			</button>
+		</div>
+		{{ end }}
+	</div>
+{{ end }}

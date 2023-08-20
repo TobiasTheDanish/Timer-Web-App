@@ -1,0 +1,71 @@
+{{ block "stopwatch" . }}
+	<div 
+		id="stopwatch-component"
+		{{if eq .IsRunning true}}hx-post="/tick" hx-trigger="every 1s" hx-target="#number-display" hx-swap="outerHTML" {{end}} hx-indicator="#component-indicator"
+		class="relative flex w-max flex-col items-center gap-6 rounded-xl bg-white/10 px-12 py-6 text-white"
+		>
+		<h3 class="text-2xl font-bold">
+			This is the stopwatch component
+		</h3>
+		{{ template "stopwatchDisplay" . }}
+		{{ template "stopwatchActionButtons" . }}
+	</div>
+{{ end }}
+
+{{ block "stopwatchDisplay" . }}
+	<div id="number-display" class="number-display w-full flex items-center justify-center py-4 px-6 rounded-xl bg-[#15162c]/50">
+		<input 
+		class="text-4xl text-center w-48 bg-transparent outline-0"
+		name="Num"
+		value="{{.Hours.Num}} : {{.Minutes.Num}} : {{.Seconds.Num}}"
+		disabled
+		/>
+	</div>
+{{ end }}
+
+{{ block "stopwatchActionButtons" . }}
+	{{ if eq .IsRunning false }}
+		<div 
+			id="timer-action-buttons" 
+			class="grid grid-cols-1 w-48 m-auto gap-8 px-2 justify-around">
+			<div 
+			class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
+				<button 
+					hx-post="/start"
+					hx-trigger="click"
+					hx-target="#stopwatch-component"
+					hx-swap="outerHTML"
+					class="w-full px-4 py-2 text-lg text-white font-semibold rounded-full z-10 bg-[#261d44] hover:bg-[#221940] focus:outline-none focus:bg-[#1d153c]"
+					>
+					Start
+				</button>
+			</div>
+		</div>
+	{{end}}
+	{{ if eq .IsRunning true }}
+		<div id="timer-action-buttons" class="grid grid-cols-2 w-full gap-8 px-2 justify-around">
+			<div 
+			class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
+				<button 
+					hx-post="/pause"
+					hx-trigger="click, timerEnded from:body"
+					hx-target="#stopwatch-component"
+					hx-swap="outerHTML"
+				class="w-full px-4 py-2 text-lg text-white font-semibold rounded-full z-10 bg-[#261d44] hover:bg-[#221940] focus:outline-none focus:bg-[#1d153c]">
+					Pause
+				</button>
+			</div>
+			<div 
+			class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
+				<button 
+					hx-post="/stop"
+					hx-trigger="click, timerEnded from:body"
+					hx-target="#stopwatch-component"
+					hx-swap="outerHTML"
+				class="w-full px-4 py-2 text-lg text-white font-semibold rounded-full z-10 bg-[#261d44] hover:bg-[#221940] focus:outline-none focus:bg-[#1d153c]">
+					Stop
+				</button>
+			</div>
+		</div>
+	{{ end }}
+{{ end }}

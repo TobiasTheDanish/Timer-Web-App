@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>This is index.html</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="/static/css/output.css" type="text/css" rel="stylesheet">
+		<script src="https://unpkg.com/htmx.org@1.9.4" integrity="sha384-zUfuhFKKZCbHTY6aRR46gxiqszMk5tcHjsVFxnUo8VMus4kHGVdIYVbOYYNlKmHV" crossorigin="anonymous"></script>
+	</head>
+	<body class="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+		<div class="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+			<h1 class="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+				<span class="text-[hsl(280,100%,70%)] myClass">Timer</span> App
+			</h1>
+			<div
+				class="flex flex-col items-stretch gap-y-5"
+				>
+				{{ template "componentSelector" . }}
+				<div id="component-container">
+					{{ if eq .CurrentComponent "timer" }}
+						{{ template "timer" .Timer }} 
+					{{ end }}
+					{{ if eq .CurrentComponent "stopwatch" }}
+						{{ template "stopwatch" .Stopwatch }} 
+					{{ end }}
+				</div>
+				<div id="component-indicator" class="htmx-indicator rounded-xl bg-[#37265d] absolute top-0  left-0 w-full h-full">
+					<img class="m-auto absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]" src="/static/svg-loaders/puff.svg">
+				</div>
+			</div>
+		</div>
+		<script src="/static/js/timer.js"></script>
+	</body>
+</html>

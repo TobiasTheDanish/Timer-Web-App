@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.htmx-indicator {
+		visibility: hidden;
+		transition: visibility 300ms ease-in;
+		transition-delay: 300ms;
+	}
+	.htmx-request .htmx-indicator {
+		visibility: visible;
+	}
+	.htmx-request.htmx-indicator {
+		visibility: visible;
+	}
+}

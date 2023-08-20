@@ -1,0 +1,28 @@
+{{ block "componentSelector" . }}
+	<div class="flex justify-center text-lg gap-12 rounded-xl bg-white/10 px-12 py-6 text-white">
+		{{ range .Components }}
+			{{template "component" .}}
+		{{ end }}
+	</div>
+{{ end }}
+
+{{ block "component" . }}
+		<form 
+			id="component-swap-form-{{.}}"
+			hx-post="/swap-component"
+			hx-target="#component-container"
+			hx-swap="innerHTML"
+			hx-indicator="#component-indicator"
+			>
+			<input type="hidden" name="component" value="{{.}}"/>
+			<div 
+			class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-xl p-0.5 pb-0.5">
+				<button
+					type="submit"
+					class="capitalize w-full px-6 py-4 text-xl text-white font-semibold rounded-xl z-10 bg-[#261d44] hover:bg-[#221940] focus:outline-none focus:bg-[#1d153c]"
+					>
+					{{.}}
+				</button>
+			</div>
+		</form>
+{{ end }}
