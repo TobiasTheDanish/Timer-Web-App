@@ -1,7 +1,7 @@
 {{ block "stopwatch" . }}
 	<div 
 		id="stopwatch-component"
-		{{if eq .IsRunning true}}hx-post="/tick" hx-trigger="every 1s" hx-target="#number-display" hx-swap="outerHTML" {{end}} hx-indicator="#component-indicator"
+		{{if eq .IsRunning true}}hx-post="/timer/tick" hx-trigger="every 1s" hx-target="#number-display" hx-swap="outerHTML" {{end}} hx-indicator="#component-indicator"
 		class="relative flex w-max flex-col items-center gap-6 rounded-xl bg-white/10 px-12 py-6 text-white"
 		>
 		<h3 class="text-2xl font-bold">
@@ -31,7 +31,7 @@
 			<div 
 			class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
 				<button 
-					hx-post="/start"
+					hx-post="/timer/start"
 					hx-trigger="click"
 					hx-target="#stopwatch-component"
 					hx-swap="outerHTML"
@@ -47,7 +47,7 @@
 			<div 
 			class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
 				<button 
-					hx-post="/pause"
+					hx-post="/timer/pause"
 					hx-trigger="click, timerEnded from:body"
 					hx-target="#stopwatch-component"
 					hx-swap="outerHTML"
@@ -58,7 +58,7 @@
 			<div 
 			class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
 				<button 
-					hx-post="/stop"
+					hx-post="/timer/stop"
 					hx-trigger="click, timerEnded from:body"
 					hx-target="#stopwatch-component"
 					hx-swap="outerHTML"

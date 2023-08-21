@@ -64,11 +64,12 @@ func main() {
 
 	e := echo.New()
 	e.Use(middleware.Logger())
-
 	e.Static("/static", "src/static")
-
 	e.Renderer = NewTemplateRenderer(tmpl);
-	e.GET("/", func(c echo.Context) error {
+
+	g := e.Group("/timer")
+
+	g.GET("/", func(c echo.Context) error {
 		var state State;
 
 		sessionID, err := c.Cookie("SessionID");
@@ -129,13 +130,13 @@ func main() {
 		return c.Render(http.StatusOK, "index.html", state);
 	})
 
-	e.POST("/update", func(c echo.Context) error {
+	g.POST("/update", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value]
 		return c.Render(http.StatusOK, "timerActionButtons", state.Timer);
 	})
 
-	e.POST("/start", func(c echo.Context) error {
+	g.POST("/start", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value]
 
@@ -156,7 +157,7 @@ func main() {
 		return c.String(http.StatusBadRequest, "Invalid component: '" + state.CurrentComponent + "'")
 	})
 
-	e.POST("/reset", func(c echo.Context) error {
+	g.POST("/reset", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value]
 		
@@ -173,7 +174,7 @@ func main() {
 		return c.Render(http.StatusOK, "timer", state.Timer);
 	})
 
-	e.POST("/pause", func(c echo.Context) error {
+	g.POST("/pause", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value]
 		
@@ -194,7 +195,7 @@ func main() {
 		return c.String(http.StatusBadRequest, "Invalid component: '" + state.CurrentComponent + "'")
 	})
 
-	e.POST("/stop", func(c echo.Context) error {
+	g.POST("/stop", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value]
 
@@ -224,7 +225,7 @@ func main() {
 		return c.String(http.StatusBadRequest, "Invalid component: '" + state.CurrentComponent + "'")
 	})
 
-	e.POST("/tick", func(c echo.Context) error {
+	g.POST("/tick", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value];
 
@@ -238,7 +239,7 @@ func main() {
 		return c.String(http.StatusBadRequest, "Invalid component: '" + state.CurrentComponent + "'")
 	})
 
-	e.POST("/updateNum", func(c echo.Context) error {
+	g.POST("/updateNum", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value];
 		timer := state.Timer;
@@ -288,7 +289,7 @@ func main() {
 		})
 	})
 
-	e.POST("/increment", func(c echo.Context) error {
+	g.POST("/increment", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value];
 		timer := state.Timer;
@@ -331,7 +332,7 @@ func main() {
 		})
 	})
 
-	e.POST("/decrement", func(c echo.Context) error {
+	g.POST("/decrement", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value];
 		timer := state.Timer;
@@ -374,7 +375,7 @@ func main() {
 		})
 	})
 
-	e.POST("/swap-component", func(c echo.Context) error {
+	g.POST("/swap-component", func(c echo.Context) error {
 		session, _ := c.Cookie("SessionID");
 		state := stateMap[session.Value];
 

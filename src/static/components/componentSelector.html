@@ -9,7 +9,7 @@
 {{ block "component" . }}
 		<form 
 			id="component-swap-form-{{.}}"
-			hx-post="/swap-component"
+			hx-post="/timer/swap-component"
 			hx-target="#component-container"
 			hx-swap="innerHTML"
 			hx-indicator="#component-indicator"

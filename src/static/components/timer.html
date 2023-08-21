@@ -1,7 +1,7 @@
 {{ block "timer" . }}
 	<div 
 		id="timer-component"
-		{{if eq .IsRunning true}}hx-post="/tick" hx-trigger="every 1s" hx-target="#time-container-grid" hx-swap="outerHTML" {{end}} hx-indicator="#component-indicator"
+		{{if eq .IsRunning true}}hx-post="/timer/tick" hx-trigger="every 1s" hx-target="#time-container-grid" hx-swap="outerHTML" {{end}} hx-indicator="#component-indicator"
 		class="relative flex w-max flex-col items-center gap-6 rounded-xl bg-white/10 px-12 py-6 text-white"
 		>
 		{{ template "timeContainerGrid" . }}
@@ -32,11 +32,10 @@
 		<form 
 			id="increment-form"
 			name="increment-form"
-			hx-post="/increment"
+			hx-post="/timer/increment"
 			hx-target="next .number-display"
 			hx-swap="outerHTML"
 			hx-include='#{{.Text}}-value, #{{.Text}}-max, #{{.Text}}-text'
-			hx-indicator="#indicator-timer"
 			>
 			<button
 				tabindex="-1" 
@@ -52,11 +51,10 @@
 		<form 
 			id="increment-form"
 			name="increment-form"
-			hx-post="/decrement"
+			hx-post="/timer/decrement"
 			hx-target="previous .number-display"
 			hx-swap="outerHTML"
 			hx-include='#{{.Text}}-value, #{{.Text}}-max, #{{.Text}}-text'
-			hx-indicator="#indicator-timer"
 			>
 			<button
 				tabindex="-1"
@@ -79,11 +77,10 @@
 		<form 
 			id="increment-form"
 			name="increment-form"
-			hx-post="/increment"
+			hx-post="/timer/increment"
 			hx-target="next .number-display"
 			hx-swap="outerHTML"
 			hx-include='#{{.Text}}-value, #{{.Text}}-max, #{{.Text}}-text'
-			hx-indicator="#indicator-timer"
 			>
 			<button
 				disabled
@@ -99,11 +96,10 @@
 		<form 
 			id="increment-form"
 			name="increment-form"
-			hx-post="/decrement"
+			hx-post="/timer/decrement"
 			hx-target="previous .number-display"
 			hx-swap="outerHTML"
 			hx-include='#{{.Text}}-value, #{{.Text}}-max, #{{.Text}}-text'
-			hx-indicator="#indicator-timer"
 			>
 			<button
 				disabled
@@ -118,9 +114,9 @@
 	</div>
 {{ end }}
 {{ block "numberDisplay" . }}
-	<div hx-post="/update" hx-trigger="update{{.Text}} from:body" hx-target="#timer-action-buttons" hx-swap="outerHTML" id="number-display-{{.Text}}" class="number-display flex items-center justify-center py-4 px-6 rounded-xl bg-[#15162c]/50">
+	<div hx-post="/timer/update" hx-trigger="update{{.Text}} from:body" hx-target="#timer-action-buttons" hx-swap="outerHTML" id="number-display-{{.Text}}" class="number-display flex items-center justify-center py-4 px-6 rounded-xl bg-[#15162c]/50">
 		<input 
-		hx-post="/updateNum"
+		hx-post="/timer/updateNum"
 		hx-trigger="change"
 		hx-target="#number-display-{{.Text}}"
 		hx-swap="outerHTML"
@@ -143,7 +139,7 @@
 		class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
 			<button 
 			{{ if eq .CanStart true }}
-				hx-post="/start"
+				hx-post="/timer/start"
 				hx-trigger="click"
 				hx-target="#timer-component"
 				hx-swap="outerHTML"
@@ -159,7 +155,7 @@
 		class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
 			<button 
 			{{ if eq .CanStart true }}
-				hx-post="/reset"
+				hx-post="/timer/reset"
 				hx-trigger="click"
 				hx-target="#timer-component"
 				hx-swap="outerHTML"
@@ -176,7 +172,7 @@
 		<div 
 		class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
 			<button 
-				hx-post="/pause"
+				hx-post="/timer/pause"
 				hx-trigger="click, timerEnded from:body"
 				hx-target="#timer-component"
 				hx-swap="outerHTML"
@@ -187,7 +183,7 @@
 		<div 
 		class="bg-gradient-to-bl from-[#08bf4f] from-7% via-[#4e89a8] via-45% to-[#d47eff] to-90% rounded-full p-px pb-0.5">
 			<button 
-				hx-post="/stop"
+				hx-post="/timer/stop"
 				hx-trigger="click, timerEnded from:body"
 				hx-target="#timer-component"
 				hx-swap="outerHTML"
