@@ -95,7 +95,7 @@ func main() {
 
 			state = State {
 				Components: []string {"timer", "stopwatch"},
-				CurrentComponent: "stopwatch",
+				CurrentComponent: "timer",
 				Timer: timer,
 				Stopwatch: stopwatch,
 			}
@@ -104,7 +104,7 @@ func main() {
 			s, ok := stateMap[sessionID.Value];
 			if !ok {
 				s.Components = []string {"timer", "stopwatch"};
-				s.CurrentComponent = "stopwatch";
+				s.CurrentComponent = "timer";
 				s.Timer = Timer{
 					Hours: TimerElement{ Num: 0, Max: 23, Text: "HOURS"},
 					Minutes: TimerElement{ Num: 0, Max: 59, Text: "MINUTES"},
