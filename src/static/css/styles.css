@@ -5,8 +5,8 @@
 @layer components {
 	.htmx-indicator {
 		visibility: hidden;
-		transition: visibility 300ms ease-in;
-		transition-delay: 300ms;
+		transition: opacity 500ms, visibility 500ms ease-in !important;
+		transition-delay: 500ms !important;
 	}
 	.htmx-request .htmx-indicator {
 		visibility: visible;
