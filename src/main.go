@@ -63,7 +63,6 @@ func main() {
 	}
 
 	e := echo.New()
-	e.Use(middleware.Logger())
 	e.Static("/static", "src/static")
 	e.Renderer = NewTemplateRenderer(tmpl);
 
@@ -394,8 +393,7 @@ func main() {
 		return c.String(http.StatusBadRequest, "Invalid component: '" + state.CurrentComponent + "'")
 	})
 
-	e.Logger.Info("Listening for request at port 8080")
-	e.Logger.Fatal(e.Start(":8080"))
+	log.Fatal(e.Start(":8080"))
 }
 
 func CreateSessionID(n int) string {
